@@ -29,7 +29,7 @@ import com.google.mlkit.vision.barcode.ZoomSuggestionOptions
 class MobileScannerHandler(
     private val activity: Activity,
     private val barcodeHandler: BarcodeHandler,
-    binaryMessenger: BinaryMessenger,
+    private val binaryMessenger: BinaryMessenger,
     private val permissions: MobileScannerPermissions,
     private val addPermissionListener: (RequestPermissionsResultListener) -> Unit,
     private val textureRegistry: TextureRegistry): MethodChannel.MethodCallHandler {

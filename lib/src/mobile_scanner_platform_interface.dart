@@ -91,6 +91,13 @@ abstract class MobileScannerPlatform extends PlatformInterface {
     throw UnimplementedError('setFocusPoint() has not been implemented.');
   }
 
+  /// Initialize the Google MlKit and the Mobile Scanner plugin.
+  ///
+  /// This should be done after the user agreement of privacy policy.
+  Future<void> init() {
+    throw UnimplementedError('init() has not been implemented.');
+  }
+
   /// Start the barcode scanner and prepare a scanner view.
   ///
   /// Upon calling this method, the necessary camera permission will be

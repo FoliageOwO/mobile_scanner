@@ -23,6 +23,7 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.EventChannel
 import io.flutter.view.TextureRegistry
 import java.io.File
+import com.google.mlkit.common.MlKit
 import com.google.mlkit.vision.barcode.ZoomSuggestionOptions
 
 class MobileScannerHandler(
@@ -31,7 +32,7 @@ class MobileScannerHandler(
     binaryMessenger: BinaryMessenger,
     private val permissions: MobileScannerPermissions,
     private val addPermissionListener: (RequestPermissionsResultListener) -> Unit,
-    textureRegistry: TextureRegistry): MethodChannel.MethodCallHandler {
+    private val textureRegistry: TextureRegistry): MethodChannel.MethodCallHandler {
 
     private val analyzeImageErrorCallback: AnalyzerErrorCallback = {
         Handler(Looper.getMainLooper()).post {
@@ -96,14 +97,14 @@ class MobileScannerHandler(
             "dev.steenbakker.mobile_scanner/scanner/method")
         methodChannel!!.setMethodCallHandler(this)
 
-        val deviceOrientationListener = DeviceOrientationListener(activity)
-
-        deviceOrientationChannel = EventChannel(binaryMessenger,
-            "dev.steenbakker.mobile_scanner/scanner/deviceOrientation")
-        deviceOrientationChannel!!.setStreamHandler(deviceOrientationListener)
-
-        mobileScanner = MobileScanner(
-            activity, textureRegistry, callback, errorCallback, deviceOrientationListener)
+//        val deviceOrientationListener = DeviceOrientationListener(activity)
+//
+//        deviceOrientationChannel = EventChannel(binaryMessenger,
+//            "dev.steenbakker.mobile_scanner/scanner/deviceOrientation")
+//        deviceOrientationChannel!!.setStreamHandler(deviceOrientationListener)
+//
+//        mobileScanner = MobileScanner(
+//            activity, textureRegistry, callback, errorCallback, deviceOrientationListener)
     }
 
     fun dispose(activityPluginBinding: ActivityPluginBinding) {
@@ -126,6 +127,7 @@ class MobileScannerHandler(
     @ExperimentalGetImage
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
+            "init" -> init()
             "state" -> result.success(permissions.hasCameraPermission(activity))
             "request" -> permissions.requestPermission(
                 activity,
@@ -154,6 +156,22 @@ class MobileScannerHandler(
             "setFocus" -> setFocus(call, result)
             else -> result.notImplemented()
         }
+    }
+
+    @ExperimentalLensFacing
+    @ExperimentalGetImage
+    private fun init() {
+        if (mobileScanner != null) return
+
+        val deviceOrientationListener = DeviceOrientationListener(activity)
+
+        deviceOrientationChannel = EventChannel(binaryMessenger,
+            "dev.steenbakker.mobile_scanner/scanner/deviceOrientation")
+        deviceOrientationChannel!!.setStreamHandler(deviceOrientationListener)
+
+        MlKit.initialize(activity)
+        mobileScanner = MobileScanner(
+            activity, textureRegistry, callback, errorCallback, deviceOrientationListener)
     }
 
     @ExperimentalLensFacing

@@ -346,6 +346,12 @@ class MobileScannerController extends ValueNotifier<MobileScannerState> {
     await MobileScannerPlatform.instance.setFocusPoint(clampedPosition);
   }
 
+  ///
+  /// This should be done after the user agreement of privacy policy.
+  Future<void> init() async {
+    await MobileScannerPlatform.instance.init();
+  }
+
   /// Start scanning for barcodes.
   ///
   /// The [cameraDirection] can be used to specify the camera direction.

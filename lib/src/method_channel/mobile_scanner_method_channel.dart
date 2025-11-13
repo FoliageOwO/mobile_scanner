@@ -290,6 +290,22 @@ class MethodChannelMobileScanner extends MobileScannerPlatform {
   }
 
   @override
+  Future<void> init() async {
+    try {
+      await methodChannel.invokeMethod('init');
+    } on PlatformException catch (error) {
+      throw MobileScannerException(
+        errorCode: MobileScannerErrorCode.fromPlatformException(error),
+        errorDetails: MobileScannerErrorDetails(
+          code: error.code,
+          details: error.details as Object?,
+          message: error.message,
+        ),
+      );
+    }
+  }
+
+  @override
   Future<MobileScannerViewAttributes> start(StartOptions startOptions) async {
     if (!_pausing && _textureId != null) {
       throw MobileScannerException(

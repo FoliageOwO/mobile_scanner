@@ -346,9 +346,10 @@ class MobileScannerController extends ValueNotifier<MobileScannerState> {
     await MobileScannerPlatform.instance.setFocusPoint(clampedPosition);
   }
 
+  /// Initialize the Google MlKit and the Mobile Scanner plugin.
   ///
   /// This should be done after the user agreement of privacy policy.
-  Future<void> init() async {
+  static Future<void> init() async {
     await MobileScannerPlatform.instance.init();
   }
 

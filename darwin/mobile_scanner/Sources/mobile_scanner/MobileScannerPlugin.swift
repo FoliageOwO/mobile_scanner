@@ -91,6 +91,8 @@ public class MobileScannerPlugin: NSObject, FlutterPlugin, FlutterStreamHandler,
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
+        case "init":
+            onInit(call, result)
         case "state":
             checkPermission(call, result)
         case "request":
@@ -255,6 +257,10 @@ public class MobileScannerPlugin: NSObject, FlutterPlugin, FlutterStreamHandler,
                 }
             }
         }
+    }
+
+    func onInit(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        result(nil)
     }
     
     func checkPermission(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
